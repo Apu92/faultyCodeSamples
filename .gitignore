@@ -1,5 +1,14 @@
+# Folders
+infer-out/
+CMakeFiles/
+
 # Prerequisites
 *.d
+
+# Cmake temp files
+*CMakeCache.txt
+*cmake_install.cmake
+*Makefile
 
 # Compiled Object files
 *.slo
