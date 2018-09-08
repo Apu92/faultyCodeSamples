@@ -7,6 +7,6 @@ struct A {
 
 int main() {
   A *a = nullptr;
-  int num = a->num;
+  return a->num;
 }
 
