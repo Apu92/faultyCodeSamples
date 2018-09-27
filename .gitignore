@@ -1,7 +1,9 @@
 # Folders
-infer-out/
-CMakeFiles/
-*/Results/
+**/infer-out/
+**/CMakeFiles/
+**/Results/
+**/.columbus_cpp/
+**/build/
 
 # Prerequisites
 *.d
