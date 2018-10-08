@@ -1,12 +1,6 @@
-#include <vector>
-
-
-struct A {
-   int num;
-};
+#include "../include/simple_null_pointer.h"
 
 int main() {
-  A *a = nullptr;
-  return a->num;
+  return simpleNullPointer();
 }
 

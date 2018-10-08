@@ -4,6 +4,8 @@
 **/Results/
 **/.columbus_cpp/
 **/build/
+**/.scannerwork/
+**/result/
 
 # Prerequisites
 *.d
