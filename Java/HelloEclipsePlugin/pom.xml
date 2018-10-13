@@ -8,9 +8,8 @@
 	<packaging>pom</packaging>
 	<properties>
 		<java-version>1.8</java-version>
-		<tycho.version>0.25.0</tycho.version>
+		<tycho.version>1.2.0</tycho.version>
 		<surefire.version>2.22.1</surefire.version>
-		<junit5.jupiter.engine.version>5.3.1</junit5.jupiter.engine.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
@@ -50,7 +49,7 @@
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
-							<arch>x86</arch> <!--arch>x86_64</arch -->
+							<arch>x86_64</arch> <!--arch>x86_64</arch -->
 						</environment>
 					</environments>
 				</configuration>
@@ -65,8 +64,8 @@
 
 	<repositories>
 		<repository>
-			<id>eclipse-mars</id>
-			<url>http://download.eclipse.org/releases/mars</url>
+			<id>eclipse-oxygen</id>
+			<url>http://download.eclipse.org/releases/oxygen</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>

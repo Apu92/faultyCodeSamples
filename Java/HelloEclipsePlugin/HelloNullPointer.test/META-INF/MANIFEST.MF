@@ -3,6 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: at.samplecode.eclipse.plugin.test
 Bundle-Version: 1.0.0.qualifier
-Fragment-Host: at.samplecode.eclipse.plugin;bundle-version="1.0.0.qualifier"
-Automatic-Module-Name: HelloNullPointer.test
+Automatic-Module-Name: hello.null.pointer
+Fragment-Host: 
+ at.samplecode.eclipse.plugin;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.junit;version="4.12.0",
+ org.junit.jupiter.api;version="5.0.0"
