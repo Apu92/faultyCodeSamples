@@ -1,15 +1,16 @@
 export BUILD_DIR = $(shell "pwd")/build
 
 # Flags passed to the C++ compiler.
-export CXXFLAGS = -g -pthread --coverage
+#export CXXFLAGS = -g -pthread --coverage
 
 # Flags passed to the linker.
-export LDFLAGS = -pthread --coverage
+#export LDFLAGS = -pthread --coverage
 
 
 all:
 	@mkdir -p build
-	cd build; cmake ../
+	cd build; cmake ../ -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_EXE_LINKER_FLAGS=--coverage
+	#cd build; cmake ../
 	@$(MAKE) -C build
 
 clean:
