@@ -23,8 +23,8 @@ node {
 						 "grep -o '<error id' ${CPPCHECK_REPORT_FILE} | wc -l", 
 						 "grep -o '<violation' ${INFER_REPORT_FILE} | wc -l" ]
 	
-	def TOOLS = [ RATS : "-Dsonar.cxx.rats.reportPath=${RATS_REPORT_FILE}", 
-				  Cppcheck : "-Dsonar.cxx.cppcheck.reportPath=${CPPCHECK_REPORT_FILE}" ]
+	def TOOLS_CPP = [ RATS : "-Dsonar.cxx.rats.reportPath=${RATS_REPORT_FILE}", 
+				  	  Cppcheck : "-Dsonar.cxx.cppcheck.reportPath=${CPPCHECK_REPORT_FILE}" ]
 	
 	//
 	// Variables
@@ -65,37 +65,64 @@ node {
     stage ('Run Cppcheck') {
 		runTool(directorities, DIR_CPP_SIMPLE_PROJECTS, "mkdir -p ${BUILD_FOLDER_CPP}", "cppcheck -v --enable=all --xml ${SOURCE_FOLDER} 2> ${CPPCHECK_REPORT_FILE}")
     }
-    stage ('Run infer') {
+    stage ('Run infer C++') {
 		runTool(directorities, DIR_CPP_SIMPLE_PROJECTS, "mkdir -p ${BUILD_FOLDER_CPP_INFER}", "infer run --pmd-xml -- g++ -std=c++11 -g -o ${BUILD_FOLDER_CPP_INFER}/Main.exe ${SOURCE_FOLDER}/*.cpp")
     }
-    stage('Results') {
-		for (project in directorities[DIR_CPP_SIMPLE_PROJECTS]) {
-			dir (DIR_CPP_SIMPLE_PROJECTS + project) {
-				for (reportFile in REPORT_FILES) {
-					echo reportFile
-					sh "${reportFile}"		                 
-                }
-			}
-		}
+    stage ('Run infer Java') {
+		runTool(directorities, DIR_JAVA_SIMPLE_PROJECTS, "infer run --pmd-xml -- mvn package")
     }
-    stage ('SonarQube Solo') {
-		def toolNames = TOOLS.keySet()
+//    stage('Results') {
+//		for (project in directorities[DIR_CPP_SIMPLE_PROJECTS]) {
+//			dir (DIR_CPP_SIMPLE_PROJECTS + project) {
+//				for (reportFile in REPORT_FILES) {
+//					echo reportFile
+//					sh "${reportFile}"		                 
+//                }
+//			}
+//		}
+//    }
+    stage ('SonarQube Solo C++') {
+		def toolNames = TOOLS_CPP.keySet()
 		echo "toolNames: ${toolNames}"
 		
 		for (tool in toolNames) {				
-			def properties = TOOLS[tool]
-			runSonarQubeForLanguageProjects(directorities, DIR_CPP_SIMPLE_PROJECTS,
+			def properties = TOOLS_CPP[tool]
+			runSonarQubeForCppProjects(directorities, DIR_CPP_SIMPLE_PROJECTS,
 				"SonarQube solo", sonarScannerHome, tool, properties)
 		}
     }
-    stage ('SonarQube SourceMeter') {
+    stage ('SonarQube SourceMeter C++') {
 		def properties = "-Dsm.cpp.buildfile=build.sh -Dsonar.language=cpp"
-    	runSonarQubeForLanguageProjects(directorities, DIR_CPP_SIMPLE_PROJECTS, 
+    	runSonarQubeForCppProjects(directorities, DIR_CPP_SIMPLE_PROJECTS, 
     		"SonarQube SourceMeter", sonarScannerHome, "SourceMeter", properties)
     }
+	stage ('SonarQube Solo Java') {
+	    runSonarQubeForJavaProjects(directorities, DIR_JAVA_SIMPLE_PROJECTS, 
+	    	"SonarQube solo", "SonarQube")                       
+	}
+	stage ('SonarQube SourceMeter Java') {
+	    runSonarQubeForJavaProjects(directorities, DIR_JAVA_SIMPLE_PROJECTS, 
+	    	"SonarQube SourceMeter", "SourceMeter")                       
+	}
+	stage ('SonarQube FindBugs Java') {
+	    runSonarQubeForJavaProjects(directorities, DIR_JAVA_SIMPLE_PROJECTS, 
+	    	"SonarQube FindBugs", "FindBugs")                       
+	}
+	stage ('SonarQube PMD Java') {
+	    runSonarQubeForJavaProjects(directorities, DIR_JAVA_SIMPLE_PROJECTS, 
+	    	"SonarQube PMD", "PMD")                       
+	}
 }
 
-def runSonarQubeForLanguageProjects(directorities, directory, instanceName, sonarScannerHome, toolName, properties) {
+def runSonarQubeForJavaProjects(directorities, directory, instanceName, toolName) {
+	runSonarQubeForLanguageProjects(directorities, directory, instanceName, "mvn package sonar:sonar -Dmaven.test.failure.ignore=true", toolName, "")                                                                                                       
+}
+
+def runSonarQubeForCppProjects(directorities, directory, instanceName, sonarScannerHome, toolName, properties) {
+	runSonarQubeForLanguageProjects(directorities, directory, instanceName, "${sonarScannerHome}/bin/sonar-scanner", toolName, properties)                                                                                                       
+}
+
+def runSonarQubeForLanguageProjects(directorities, directory, instanceName, sonarCommand, toolName, properties) {
 	for (project in directorities[directory]) {
 		dir (directory + project) {			
 			def projectKey = directory + project + toolName
@@ -105,7 +132,7 @@ def runSonarQubeForLanguageProjects(directorities, directory, instanceName, sona
 			projectKey = projectKey.replaceAll("C\\+\\+", "Cpp")
 			
 			withSonarQubeEnv("${instanceName}") {
-		    	sh "time ${sonarScannerHome}/bin/sonar-scanner \
+		    	sh "time ${sonarCommand} \
 		        	-Dsonar.projectKey=${projectKey} \
 		            -Dsonar.projectName=${projectName} \
 		            -Dsonar.projectVersion=1.0 \
@@ -113,6 +140,10 @@ def runSonarQubeForLanguageProjects(directorities, directory, instanceName, sona
 		    }
 		}
 	}  
+}
+
+def runTool(directorities, directory, command) {
+	runTool(directorities, directory, "", command)                                   
 }
 
 def runTool(directorities, directory, precommand, command) {
