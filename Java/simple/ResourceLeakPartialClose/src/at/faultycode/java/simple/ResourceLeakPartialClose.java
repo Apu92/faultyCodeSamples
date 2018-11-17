@@ -1,32 +1,28 @@
 package at.faultycode.java.simple;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResourceLeakPartialClose {
 
+	private static final Logger LOGGER = Logger.getLogger(ResourceLeakPartialClose.class.getName());
+	
 	public static void main(String[] args) {
 
-		handleErrorPrintMessageToFile("Hello World!" + System.lineSeparator());
-	}
-	
-	private static void handleErrorPrintMessageToFile(final String message) {
-		try {
-			printMessageToFile(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private static void printMessageToFile(final String message) throws IOException {
-		if (message == null) {
-			return;
-		}
+		String fileContent = "HelloWorld!";
+		File out = new File("output.txt");
 		
-		FileOutputStream fos = new FileOutputStream(new File("output.txt"));
-		fos.write(message.getBytes());
-		fos.close();
+		try {
+			OutputStream os = Files.newOutputStream(out.toPath());
+			os.write(fileContent.getBytes(StandardCharsets.UTF_8));
+			os.close();
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "IO exception occurred!", e);
+		}
 	}
-
 }
