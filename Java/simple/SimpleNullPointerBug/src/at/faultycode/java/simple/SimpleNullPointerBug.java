@@ -1,7 +1,11 @@
 package at.faultycode.java.simple;
 
+import java.util.logging.Logger;
+
 public class SimpleNullPointerBug {
 
+	private static final Logger LOGGER = Logger.getLogger(SimpleNullPointerBug.class.getName());
+	
 	public static void main(String[] args) {
 		
 		String message = null;
@@ -11,7 +15,7 @@ public class SimpleNullPointerBug {
 			message = "No bug occurred! Try another number of arguments.";
 		}
 		
-		System.out.println(message);
+		LOGGER.info(message);
 	}
 
 }
