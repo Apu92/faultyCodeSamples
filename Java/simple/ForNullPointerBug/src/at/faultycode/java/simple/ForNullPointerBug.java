@@ -1,0 +1,21 @@
+package at.faultycode.java.simple;
+
+import java.util.logging.Logger;
+
+public class ForNullPointerBug {
+
+	private static final Logger LOGGER = Logger.getLogger(ForNullPointerBug.class.getName());
+
+	public static void main(String[] args) {
+
+		String message = null;
+		for (int i = 0; i < args.length; i++) {
+			message += String.format("%d: %s; ", i, args[i]);
+		}
+
+		if (!message.isEmpty()) {
+			LOGGER.info(message);
+		}
+	}
+
+}
