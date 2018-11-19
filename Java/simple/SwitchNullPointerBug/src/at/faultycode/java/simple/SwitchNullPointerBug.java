@@ -4,7 +4,8 @@ import java.util.logging.Logger;
 
 public class SwitchNullPointerBug {
 
-	private static final Logger LOGGER = Logger.getLogger(SwitchNullPointerBug.class.getName());
+	private static final Logger LOGGER = 
+			Logger.getLogger(SwitchNullPointerBug.class.getName());
 
 	public static void main(String[] args) {
 

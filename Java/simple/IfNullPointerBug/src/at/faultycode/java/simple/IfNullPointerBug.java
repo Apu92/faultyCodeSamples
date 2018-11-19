@@ -4,7 +4,8 @@ import java.util.logging.Logger;
 
 public class IfNullPointerBug {
 
-	private static final Logger LOGGER = Logger.getLogger(IfNullPointerBug.class.getName());
+	private static final Logger LOGGER = 
+			Logger.getLogger(IfNullPointerBug.class.getName());
 	
 	public static void main(String[] args) {
 		

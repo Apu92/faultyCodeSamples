@@ -5,7 +5,8 @@ import java.util.logging.Logger;
 
 public class DoWhileNullPointerBug {
 
-	private static final Logger LOGGER = Logger.getLogger(DoWhileNullPointerBug.class.getName());
+	private static final Logger LOGGER = 
+			Logger.getLogger(DoWhileNullPointerBug.class.getName());
 
 	public static void main(String[] args) {
 		String[] arguments = Arrays.copyOf(args, args.length + 1);
