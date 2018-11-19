@@ -10,13 +10,15 @@ import java.util.logging.Logger;
 
 public class ResourceLeakPartialClose {
 
-	private static final Logger LOGGER = Logger.getLogger(ResourceLeakPartialClose.class.getName());
-	
+	private static final Logger LOGGER = Logger
+			.getLogger(ResourceLeakPartialClose.class.getName());
+
+
 	public static void main(String[] args) {
 
 		String fileContent = "HelloWorld!";
 		File out = new File("output.txt");
-		
+
 		try {
 			OutputStream os = Files.newOutputStream(out.toPath());
 			os.write(fileContent.getBytes(StandardCharsets.UTF_8));

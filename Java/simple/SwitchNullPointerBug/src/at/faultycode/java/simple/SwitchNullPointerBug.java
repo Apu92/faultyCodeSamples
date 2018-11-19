@@ -4,13 +4,14 @@ import java.util.logging.Logger;
 
 public class SwitchNullPointerBug {
 
-	private static final Logger LOGGER = 
-			Logger.getLogger(SwitchNullPointerBug.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(SwitchNullPointerBug.class.getName());
+
 
 	public static void main(String[] args) {
 
 		String message = null;
-		switch(args.length) {
+		switch (args.length) {
 		case 1:
 			message = "1 argument is specified.";
 			break;
