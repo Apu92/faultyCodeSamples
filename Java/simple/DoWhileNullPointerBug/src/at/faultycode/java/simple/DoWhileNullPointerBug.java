@@ -1,6 +1,5 @@
 package at.faultycode.java.simple;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class DoWhileNullPointerBug {
@@ -8,13 +7,15 @@ public class DoWhileNullPointerBug {
 	private static final Logger LOGGER = 
 			Logger.getLogger(DoWhileNullPointerBug.class.getName());
 
+	private static final String NO_ARGUMENTS = "No arguments are specified!";
+	
+	
 	public static void main(String[] args) {
-		String[] arguments = Arrays.copyOf(args, args.length + 1);
 		String message = "";
 		
 		int i = 0;
 		do {
-			message = arguments[i];
+			message = args.length == 0 ? NO_ARGUMENTS : null;
 			i++;
 		} while (i < args.length);
 
