@@ -8,9 +8,10 @@ public class SimpleNullPointerBug {
 			Logger.getLogger(SimpleNullPointerBug.class.getName());
 	
 	public static void main(String[] args) {
-		
 		String message = null;
-		LOGGER.info(message.toString());
+		message = message.format("%d argument(s) are entered!", args.length);
+
+		LOGGER.info(message);
 	}
 
 }
