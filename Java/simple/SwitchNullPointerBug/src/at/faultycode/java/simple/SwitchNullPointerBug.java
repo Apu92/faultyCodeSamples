@@ -18,7 +18,7 @@ public class SwitchNullPointerBug {
 			message = "2 arguments are specified";
 			break;
 		case 3:
-			message = message.replace("2", "3");
+			message = message.replace('2', '3');
 			break;
 		default:
 			message = "No bug occurred! Try another number of arguments.";
