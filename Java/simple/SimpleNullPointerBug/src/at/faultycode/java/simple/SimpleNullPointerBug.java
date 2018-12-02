@@ -2,17 +2,26 @@ package at.faultycode.java.simple;
 
 import java.util.logging.Logger;
 
-public class SimpleNullPointerBug {
+/**
+ * @author MaAb
+ */
+public final class SimpleNullPointerBug {
 
+	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
 			.getLogger(SimpleNullPointerBug.class.getName());
 
+	private SimpleNullPointerBug() {}
 
+	/**
+	 * Entry point of program
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		String message = null;
-		message = message.format("%d argument(s) are entered!", args.length);
+		Object obj = null;
+		final String message = obj.toString();
 
 		LOGGER.info(message);
 	}
-
 }
