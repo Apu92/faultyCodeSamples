@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="antbuild" default="generateBuildScript" basedir=".">
+
+	<property name="eclipse.dir" value="/home/ma/eclipse/eclipse-rcp-oxygen/eclipse"/>
+
+	<property file="build.properties"></property>
+
+	<basename file="${basedir}" property="project.name"/>
+	
+	<target name="generateBuildScript">
+		<echo>${basedir}</echo>
+		<echo>${project.name}</echo>
+		
+	    <eclipse.buildScript elements="plugin@${project.name}"
+	        buildDirectory="${basedir}"
+	        baseLocation="${eclipse.dir}"
+	        pluginPath="${basedir}/../" />
+	</target>
+
+</project>
