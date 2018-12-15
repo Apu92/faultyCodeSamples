@@ -2,12 +2,22 @@ package at.faultycode.java.simple;
 
 import java.util.logging.Logger;
 
+/**
+ * @author MaAb
+ */
 public class WhileNullPointerBug {
 
+	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
 			.getLogger(WhileNullPointerBug.class.getName());
 
-
+	private WhileNullPointerBug() {}
+	
+	/**
+	 * Entry point of program
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String message = "No arguments are specified!";
 
@@ -21,5 +31,4 @@ public class WhileNullPointerBug {
 			LOGGER.info(message);
 		}
 	}
-
 }

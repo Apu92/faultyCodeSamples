@@ -8,14 +8,23 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author MaAb
+ */
 public class ResourceLeakPartialClose {
 
+	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
 			.getLogger(ResourceLeakPartialClose.class.getName());
 
-
+	private ResourceLeakPartialClose() {}
+	
+	/**
+	 * Entry point of program
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-
 		String fileContent = "HelloWorld!";
 		File out = new File("output.txt");
 

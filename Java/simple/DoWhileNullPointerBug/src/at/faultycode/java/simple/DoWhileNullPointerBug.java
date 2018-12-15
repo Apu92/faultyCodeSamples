@@ -2,14 +2,24 @@ package at.faultycode.java.simple;
 
 import java.util.logging.Logger;
 
+/**
+ * @author MaAb
+ */
 public class DoWhileNullPointerBug {
 
+	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
 			.getLogger(DoWhileNullPointerBug.class.getName());
 
 	private static final String NO_ARGUMENTS = "No arguments are specified!";
 
-
+	private DoWhileNullPointerBug() {}
+	
+	/**
+	 * Entry point of program
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String message = "";
 
@@ -23,5 +33,4 @@ public class DoWhileNullPointerBug {
 			LOGGER.info(message);
 		}
 	}
-
 }

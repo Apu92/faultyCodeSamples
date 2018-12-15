@@ -2,14 +2,23 @@ package at.faultycode.java.simple;
 
 import java.util.logging.Logger;
 
+/**
+ * @author MaAb
+ */
 public class SwitchNullPointerBug {
 
+	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
 			.getLogger(SwitchNullPointerBug.class.getName());
 
-
+	private SwitchNullPointerBug() {}
+	
+	/**
+	 * Entry point of program
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-
 		String message = null;
 		switch (args.length) {
 		case 1:
@@ -28,5 +37,4 @@ public class SwitchNullPointerBug {
 
 		LOGGER.info(message);
 	}
-
 }
