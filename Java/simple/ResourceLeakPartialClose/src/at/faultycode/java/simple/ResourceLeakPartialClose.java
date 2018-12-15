@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * @author MaAb
  */
-public class ResourceLeakPartialClose {
+public final class ResourceLeakPartialClose {
 
 	/** Default Java logger **/
 	private static final Logger LOGGER = Logger

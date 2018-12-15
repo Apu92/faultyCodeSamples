@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 /**
  * @author MaAb
  */
-public class IfNullPointerBug {
+public final class IfNullPointerBug {
 
 	/** Default Java logger **/
 	private static final Logger LOGGER = Logger

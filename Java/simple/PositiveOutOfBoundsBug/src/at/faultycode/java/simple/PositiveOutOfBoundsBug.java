@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 /**
  * @author MaAb
  */
-public class PositiveOutOfBoundsBug {
+public final class PositiveOutOfBoundsBug {
 
 	/** Default Java logger **/
 	private static final Logger LOGGER = Logger

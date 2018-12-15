@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 /**
  * @author MaAb
  */
-public class OfByOneBug {
+public final class OfByOneBug {
 
 	/** Default Java logger **/
 	private static final Logger LOGGER = Logger
