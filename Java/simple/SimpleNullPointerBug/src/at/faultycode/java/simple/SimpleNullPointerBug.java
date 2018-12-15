@@ -21,7 +21,7 @@ public final class SimpleNullPointerBug {
 	public static void main(String[] args) {
 		Object obj = null;
 		final String message = obj.toString();
-
+		
 		LOGGER.info(message);
 	}
 }
