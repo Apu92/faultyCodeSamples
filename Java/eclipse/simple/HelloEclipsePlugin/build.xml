@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="at.samplecode.eclipse.plugin" default="all" basedir=".">
+
+<target name="all">
+     <ant antfile="build.xml" target="build.jars" dir="HelloNullPointer/" />
+     <ant antfile="build.xml" target="build.jars" dir="HelloNullPointer.test/"/>
+</target>
+
+<target name="clean">
+	<ant antfile="build.xml" target="clean" dir="HelloNullPointer/" />
+    <ant antfile="build.xml" target="clean" dir="HelloNullPointer.test/"/>
+</target>
+
+</project>

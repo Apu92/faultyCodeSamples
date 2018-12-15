@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="antbuild" default="generateBuildScript" basedir=".">
+
+	<!-- Call this script via:
+	
+	java -jar /home/ma/rcp-oxygen/eclipse/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml
+	
+	-->
+	
+	<property name="eclipse.dir" value="/home/ma/rcp-oxygen/eclipse"/>
+
+	<property file="build.properties"></property>
+
+	<basename file="${basedir}" property="project.name"/>
+	
+	<target name="generateBuildScript">
+		<echo>${basedir}</echo>
+		<echo>${project.name}</echo>
+		
+	    <eclipse.buildScript elements="plugin@at.samplecode.eclipse.plugin"
+	        buildDirectory="${basedir}"
+	        baseLocation="${eclipse.dir}"
+	        pluginPath="${basedir}/../" />
+	</target>
+
+</project>
