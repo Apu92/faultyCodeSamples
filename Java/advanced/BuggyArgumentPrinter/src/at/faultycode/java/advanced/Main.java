@@ -1,6 +1,7 @@
 package at.faultycode.java.advanced;
 
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,30 +20,29 @@ public class Main {
 	 * @param args
 	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		LOGGER.info("Start program...");
-		Thread t1, t2;
+		final ArgumentPrinter argPrinter = new ArgumentPrinter();
 		for (int i = 0; i < 5; i++) {
-		  final ArgumentPrinter argPrinter = new ArgumentPrinter();
-		  Object[] t1Args = i == 0? args : generateRandomArgs();
-      t1 = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          argPrinter.setArguments(t1Args, Integer.valueOf(5)); argPrinter.logAll();
-        }
-      });
-      t2 = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          argPrinter.setArguments(generateRandomArgs(), Integer.valueOf(10)); argPrinter.logAll();
-        }
-      }); t1.start(); t2.start(); LOGGER.info(i + ": iteration.."); t1.join(); t2.join();
-    }
+			if (generateRandomInteger() > 0)
+				LOGGER.log(Level.INFO, "Log file path: '{0}'", argPrinter.initLogFile().toString());
+			Object[] testArguments = i == 0 ? args : generateRandomArgs();
+			argPrinter.setArguments(testArguments, 5);
+			argPrinter.logAll();
+			LOGGER.log(Level.INFO, "{0}: iteration..", i);
+		}
 	}
 	
 	private static Object[] generateRandomArgs() {
 	  int numArgs = random.nextInt(10);
 	  if (numArgs > 0) { return new Object[numArgs]; }
 	  return null;
+	}
+	
+	private static Integer generateRandomInteger() {
+		Integer randomValue = Integer.valueOf(random.nextInt(2));
+		if (randomValue > 0)
+			return randomValue;
+		return null;
 	}
 }
