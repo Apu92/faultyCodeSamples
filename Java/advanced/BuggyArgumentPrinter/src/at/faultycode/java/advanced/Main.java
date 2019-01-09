@@ -12,7 +12,7 @@ public class Main {
 	/** Default Java logger **/
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 	
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 	
 	/**
 	 * Entry point of program
@@ -34,13 +34,13 @@ public class Main {
 	}
 	
 	private static Object[] generateRandomArgs() {
-	  int numArgs = random.nextInt(10);
+	  int numArgs = RANDOM.nextInt(10);
 	  if (numArgs > 0) { return new Object[numArgs]; }
 	  return null;
 	}
 	
 	private static Integer generateRandomInteger() {
-		Integer randomValue = Integer.valueOf(random.nextInt(2));
+		Integer randomValue = Integer.valueOf(RANDOM.nextInt(2));
 		if (randomValue > 0)
 			return randomValue;
 		return null;
