@@ -7,7 +7,6 @@ public class XMLFileGenerator implements IFileGenerator {
 
 	@Override
 	public String getDefaultFileName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

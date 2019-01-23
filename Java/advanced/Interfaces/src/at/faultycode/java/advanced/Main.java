@@ -23,9 +23,9 @@ public final class Main {
 		logDefaultDirectory(generatorA);
 		logDefaultDirectory(generatorB);
 		
-		LOGGER.info(String.format("Default XML file name: ", 
+		LOGGER.info(String.format("Default XML file name: %s", 
 				generatorA.getDefaultFileName().trim()));
-		LOGGER.info(String.format("Default CSV file name: ", 
+		LOGGER.info(String.format("Default CSV file name: %s", 
 				generatorB.getDefaultFileName().trim()));
 	}
 	
