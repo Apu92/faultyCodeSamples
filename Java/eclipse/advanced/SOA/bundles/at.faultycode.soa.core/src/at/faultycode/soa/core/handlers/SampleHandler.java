@@ -29,15 +29,12 @@ public class SampleHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
-//		IsFaultyServiceImpl obj = new IsFaultyServiceImpl();
-//		LOGGER.info(obj.getServiceName().trim());
+		IsNotFaultyService notFaultyService = ServiceProvider.getService(IsNotFaultyService.class);
+		LOGGER.info(notFaultyService.getServiceName().trim());
 		
-//		IsNotFaultyService notFaultyService = ServiceProvider.getService(IsNotFaultyService.class);
-//		LOGGER.info(notFaultyService.getServiceName().trim());
-//		
-//		MayBeFaultyService mayBeFaultyService = ServiceProvider.getService(MayBeFaultyService.class);
-//		LOGGER.info(mayBeFaultyService.getServiceName().trim());
-//		
+		MayBeFaultyService mayBeFaultyService = ServiceProvider.getService(MayBeFaultyService.class);
+		LOGGER.info(mayBeFaultyService.getServiceName().trim());
+		
 		IsFaultyServiceImpl isFaultyService = ServiceProvider.getService(IsFaultyService.class);
 		LOGGER.info(isFaultyService.getServiceName().trim());
 		
@@ -48,5 +45,10 @@ public class SampleHandler extends AbstractHandler {
 				"Core",
 				"Hello, Eclipse world");
 		return null;
+	}
+	
+	public static void executeInterface() {
+		IsFaultyServiceImpl obj = new IsFaultyServiceImpl();
+		LOGGER.info(obj.getServiceName().trim());
 	}
 }

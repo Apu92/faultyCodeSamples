@@ -3,6 +3,7 @@
 ## Folders
 **/bin/
 **/target/
+**/@dot/
 
 ## Files
 *.pmd

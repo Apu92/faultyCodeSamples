@@ -2,6 +2,6 @@ package at.faultycode.soa.core.service.infrastructure;
 
 public interface IService {
 
-	public static final String SERVICE_ID = "at.faultycode.core.service";
+	public static final String SERVICE_ID = "at.faultycode.soa.core.service";
 	
 }
