@@ -5,7 +5,7 @@
 
 namespace faulty {
 
-int isRandomOrNot() {
+int isRandomOrNot(int argc) {
 	int random;
 
 	std::cout << argc << " arguments are entered.\n";
@@ -17,5 +17,5 @@ int isRandomOrNot() {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  return faulty::isRandomOrNot();
+  return faulty::isRandomOrNot(argc);
 }
