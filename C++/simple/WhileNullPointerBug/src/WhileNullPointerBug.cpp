@@ -10,12 +10,13 @@ struct A {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-    A *a = A();
-    *a->num = argc;
+    A *a = new A();
+    a->num = argc;
     
-    int i = 0;
+    int i = 2;
     while (i < argc) {
-      *a = nullptr;
+      a = nullptr;
+      i++;
     }
     
     return a->num;
