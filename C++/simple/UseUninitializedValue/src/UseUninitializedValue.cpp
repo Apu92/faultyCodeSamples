@@ -1,6 +1,11 @@
-
+///
+/// Author: MaAb
+///
 #include <iostream>
 
+///
+/// Entry point of program
+///
 int main(int argc, char** argv) {
 	int random;
 

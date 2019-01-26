@@ -1,0 +1,161 @@
+//
+// Global Constants
+//
+def PROJECT_DIR = "C++/simple/SimpleNullPointerBug"
+def PROJECT_SRC = "src"
+def PROJECT_BUILD = "build"
+def PROJECT_BUILD_COMMAND = "g++ src/*.cpp"
+
+def RESULTS_CSV = "output.csv"
+
+def TOOL_RATS = "RATS"
+def TOOL_CPPCHECK = "Cppcheck"
+def TOOL_SOURCEMETER = "SourceMeter"
+def TOOL_INFER = "Infer"
+
+def build_command = ""
+def solo_build = false
+
+def tool_name = ""
+def tool_command = ""
+def tool_command_exe_time = ""
+def tool_report = ""
+
+def scannerHome
+def sonar_project_key = ""
+def sonar_sources = ""
+def sonar_properties = ""
+
+//node("jenkins-slave-cpp") {
+//node("master") {
+//   stage('Stash SourceMeter') {
+//   		dir("/var/jenkins_home/SourceMeter-8.2.0-x64-linux/") {
+//	   		stash includes: '**/**', name: 'sm'                 
+//   		}
+//   }
+   node("jenkins-slave-cpp") {
+//       stage('Unstash SourceMeter') {
+//   			dir("/var/jenkins_home/SourceMeter-8.2.0-x64-linux/") {
+//           		unstash 'sm'
+//   			}
+//       }
+   stage('Cleanup') {
+       deleteDir()
+   }
+   stage('Git Clone') { // for display purposes
+      // Get some code from a GitHub repository
+      git 'https://github.com/Apu92/faultyCodeSamples.git'
+   }
+   stage('Define Variables') {
+      scannerHome = tool 'SonarScanner'
+      
+      dir(PROJECT_DIR) {
+          sh "mkdir -p ${PROJECT_BUILD}"
+      }
+      project_build_dir = PROJECT_BUILD + "/"
+      
+      if (JOB_NAME.contains(TOOL_RATS)) {
+      	   tool_name = TOOL_RATS
+           tool_report = PROJECT_BUILD + "/rats-report.xml"
+           tool_command = "rats -w 3 --xml ${PROJECT_SRC} > ${tool_report}"
+           tool_command_exe_time = "grep -C1 '<total_time' ${tool_report}"
+           sonar_properties = "-Dsonar.language=c++ -Dsonar.cxx.rats.reportPath=${tool_report}"   
+      } else if (JOB_NAME.contains(TOOL_CPPCHECK)) {
+           tool_name = TOOL_CPPCHECK
+           tool_report = PROJECT_BUILD + "/cppcheck-report.xml"
+           tool_command = "cppcheck -v --enable=all --xml ${PROJECT_SRC} 2> ${tool_report}"         
+           sonar_properties = "-Dsonar.language=c++ -Dsonar.cxx.cppcheck.reportPath=${tool_report}"   
+      } else if (JOB_NAME.contains(TOOL_SOURCEMETER)) {
+      	   solo_build = true
+           tool_name = TOOL_SOURCEMETER
+           tool_command = "/var/jenkins_home/SourceMeter-8.2.0-x64-linux/CPP/SourceMeterCPP -projectName=simpleNullPointer -buildScript=build.sh -resultsDir=Results"         
+           sonar_properties = "-Dsonar.language=cpp -Dsm.cpp.buildfile=build.sh"   
+      } else if (JOB_NAME.contains(TOOL_INFER)) {
+      	   solo_build = true
+           tool_name = TOOL_INFER
+           tool_command = "/opt/infer-linux64-v0.15.0/bin/infer run -- ${PROJECT_BUILD_COMMAND}"         
+           sonar_properties = "-Dsonar.language=cpp -Dsm.cpp.buildfile=build.sh"   
+      } 
+
+      sonar_project_key = JOB_NAME
+      sonar_sources = PROJECT_SRC
+   }
+   stage('Prepare Tool') {
+       dir(PROJECT_DIR) {
+			writeSoloBuildFile(PROJECT_BUILD, PROJECT_BUILD_COMMAND, RESULTS_CSV)
+			sh "chmod +x build.sh"
+			writeBuildFile(tool_command, RESULTS_CSV)
+			sh "chmod +x runTool.sh"
+			
+			// Init results file
+			echo "\"SoloBuild;Build+Tool\" > ${RESULTS_CSV}"
+       }
+   }
+   stage('Run Solo Build & Tool') {
+       dir(PROJECT_DIR) {
+       		for (i = 1; i <= 10; i++) {
+				echo "************************************************************"
+				if (solo_build) {
+					echo "\n\n**** Solo Build"
+					sh "./build.sh"
+					echo "************************************************************"
+				}
+				echo "\n\n**** Run ${tool_name}"
+				sh "./runTool.sh"
+				echo "************************************************************"
+       		}
+       }
+   }
+//   stage("SonarQube Analysis") {
+//		withSonarQubeEnv('SonarQube Cuby') {
+//			dir (PROJECT_DIR) {
+//				sh "time ${scannerHome}/bin/sonar-scanner -Dsonar.scm.provider=git \
+//				        -Dsonar.projectKey=${sonar_project_key} \
+//				        -Dsonar.sources=${PROJECT_SRC} ${sonar_properties}"
+//		    }
+//		}
+//	}
+	stage("Show results") {
+      dir(PROJECT_DIR) {
+          archiveArtifacts artifacts: RESULTS_CSV
+      }
+	}
+
+   }
+//    stage("Execution Time") {
+//	   dir(PROJECT_DIR) {
+//            sh "${tool_command_exe_time}"
+//       }                         
+//    }
+//}
+
+//   /var/jenkins_home/SourceMeter-8.2.0-x64-linux/CPP/SourceMeterCPP -projectName=simpleNullPointer -buildScript=build.sh -resultsDir=Results
+
+void writeSoloBuildFile(buildFolderName, project_build_command, results_csv) {
+	def data = []
+	data.add('#!/bin/sh')
+	data.add('')
+	data.add('rm -f *.out || true')
+	data.add('rm -rf ' + buildFolderName)
+	data.add('start_t=$(date +%s%6N)')
+	data.add(project_build_command)
+	data.add('end_t=$(date +%s%6N)')
+	data.add('run_t=$((end_t-start_t))')
+	data.add('echo ${run_t}')
+	data.add('printf "0,%06d;" ${run_t} >> ' + results_csv)
+	data.add('')
+	writeFile encoding: 'UTF-8', file: 'build.sh', text: data.join('\n')
+}
+
+
+void writeBuildFile(toolCommand, results_csv) {
+	def data = []
+	data.add('start_t=$(date +%s%6N)')
+	data.add(toolCommand)
+	data.add('end_t=$(date +%s%6N)')
+	data.add('run_t=$((end_t-start_t))')
+	data.add('echo ${run_t}')
+	data.add('printf "0,%06d\n" ${run_t} >> ' + results_csv)
+	data.add('')
+	writeFile encoding: 'UTF-8', file: 'runTool.sh', text: data.join('\n')
+}

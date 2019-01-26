@@ -1,9 +1,14 @@
-
+///
+/// Author: MaAb
+///
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 
+///
+/// Entry point of program
+///
 int main(int argc, char** argv) {
 
 	int* random = (int*) malloc(sizeof(int));
