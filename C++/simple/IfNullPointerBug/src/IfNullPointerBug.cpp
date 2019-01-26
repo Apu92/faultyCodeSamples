@@ -13,9 +13,9 @@ struct A {
 ///
 int main(int argc, char** argv) {
     A *a = nullptr;
-	if (argc == 2) {
+    if (argc == 2) {
       return a->num;
-	}
-	return argc;
+    }
+    return argc;
 }
 }
