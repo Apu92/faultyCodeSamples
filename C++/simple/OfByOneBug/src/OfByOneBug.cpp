@@ -5,7 +5,7 @@
 
 namespace faulty {
 
-void failsForSure() {
+void failsForSure(int argc, char** argv) {
 	std::cout << argc << " arguments are entered.\n";
 
 	for (int i = 0; i <= argc; ++i) {
@@ -18,6 +18,6 @@ void failsForSure() {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  faulty::failsForSure();
+  faulty::failsForSure(argc, argv);
   return 0;
 }
