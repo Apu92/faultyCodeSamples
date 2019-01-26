@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <iostream>
 
+namespace faulty {
+
 ///
 /// Entry point of program
 ///
@@ -25,4 +27,5 @@ int main(int argc, char** argv) {
 	free(random);
 
 	return 0;
+}
 }

@@ -2,6 +2,8 @@
 /// Author: MaAb
 ///
 
+namespace faulty {
+
 struct A {
    int num;
 };
@@ -12,4 +14,5 @@ struct A {
 int main() {
     A *a = nullptr;
     return a->num;
+}
 }

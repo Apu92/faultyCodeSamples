@@ -2,6 +2,8 @@
 /// Author: MaAb
 ///
 
+namespace faulty {
+
 struct A {
    int num;
 };
@@ -20,4 +22,5 @@ int main(int argc, char** argv) {
     }
     
     return a->num;
+}
 }
