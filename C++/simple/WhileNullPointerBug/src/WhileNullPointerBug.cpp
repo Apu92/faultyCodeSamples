@@ -20,6 +20,7 @@ int mayFailOrNot(int argc) {
     
     return a->num;
 }
+}
 
 ///
 /// Entry point of program
