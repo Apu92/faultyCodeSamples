@@ -8,10 +8,7 @@ struct A {
    int num;
 };
 
-///
-/// Entry point of program
-///
-int main(int argc, char** argv) {
+int mayFailOrNot(int argc) {
     A *a = new A();
     a->num = argc;
     
@@ -23,4 +20,10 @@ int main(int argc, char** argv) {
     
     return a->num;
 }
+
+///
+/// Entry point of program
+///
+int main(int argc, char** argv) {
+  return mayFailOrNot(argc);
 }

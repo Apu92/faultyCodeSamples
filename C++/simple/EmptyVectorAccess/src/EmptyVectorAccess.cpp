@@ -5,11 +5,15 @@
 
 namespace faulty {
 
+int failsForSure() {
+  const std::vector<int> vec;
+  return vec[0];
+}
+}
+
 ///
 /// Entry point of program
 ///
 int main() {
-  const std::vector<int> vec;
-  return vec[0];
-}
+  return failsForSure();
 }

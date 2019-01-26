@@ -8,11 +8,15 @@ struct A {
    int num;
 };
 
+int failsForSure() {
+    A *a = nullptr;
+    return a->num;
+}
+}
+
 ///
 /// Entry point of program
 ///
 int main() {
-    A *a = nullptr;
-    return a->num;
-}
+  return failsForSure();
 }

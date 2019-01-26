@@ -8,11 +8,7 @@
 
 namespace faulty {
 
-///
-/// Entry point of program
-///
-int main(int argc, char** argv) {
-
+int mayFailOrNot() {
 	int* random = (int*) malloc(sizeof(int));
 	if (random == nullptr) {
 		perror("Out of memory");
@@ -28,4 +24,11 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+}
+
+///
+/// Entry point of program
+///
+int main(int argc, char** argv) {
+  return mayFailOrNot();
 }
