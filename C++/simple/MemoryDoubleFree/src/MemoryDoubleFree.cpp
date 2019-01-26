@@ -30,5 +30,5 @@ int mayFailOrNot() {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  return mayFailOrNot();
+  return faulty::mayFailOrNot();
 }

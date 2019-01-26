@@ -21,5 +21,5 @@ int mayFailOrNot(int argc) {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  return mayFailOrNot(argc);
+  return faulty::mayFailOrNot(argc);
 }

@@ -18,5 +18,5 @@ int failsForSure() {
 /// Entry point of program
 ///
 int main() {
-  return failsForSure();
+  return faulty::failsForSure();
 }

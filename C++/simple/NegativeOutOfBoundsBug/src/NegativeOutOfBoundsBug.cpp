@@ -16,6 +16,6 @@ void failsForSure() {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  failsForSure();
+  faulty::failsForSure();
   return 0;
 }

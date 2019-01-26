@@ -17,5 +17,5 @@ int isRandomOrNot() {
 /// Entry point of program
 ///
 int main(int argc, char** argv) {
-  return isRandomOrNot();
+  return faulty::isRandomOrNot();
 }
