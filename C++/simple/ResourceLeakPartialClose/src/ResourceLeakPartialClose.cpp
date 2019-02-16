@@ -2,17 +2,24 @@
 /// Author: MaAb
 ///
 
+#include <iostream>
+#include <stdio.h>
+
 namespace faulty {
 
 int mayFailOrNot(int argc) {
-	ofstream file;
-
 	try {
-		file.open("output.txt");
-		file << "HelloWorld!";
-		file.close();
+		FILE* f = fopen("output.txt", "w");
+		if (f != NULL) {
+			int result = fputs("HelloWorld!", f);
+			if (result != EOF) {
+				throw 1;
+			}
+
+			fclose(f);
+		}
 	} catch (...) {
-		std::cout << "Exception occurred!";
+		std::cout << "Exception occurred!\n";
 		return 1;
 	}
 	return 0;

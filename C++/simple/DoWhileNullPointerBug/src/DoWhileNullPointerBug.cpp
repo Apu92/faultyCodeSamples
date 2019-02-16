@@ -16,7 +16,7 @@ int mayFailOrNot(int argc) {
     do {
       a = argc == 1 ? a : nullptr;
       i++;
-    } while (i < argc)
+    } while (i < argc);
     
     return a->num;
 }
