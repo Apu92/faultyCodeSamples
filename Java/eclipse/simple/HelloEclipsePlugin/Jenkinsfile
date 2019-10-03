@@ -1,5 +1,8 @@
 node {
    def mvnHome
+   
+   def eclipseAbsPath = "/home/apu/eclipse-rcp-2019-09-R-linux-gtk-x86_64/eclipse"
+   
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       git 'https://github.com/Apu92/faultyCodeSamples.git'
@@ -8,15 +11,46 @@ node {
       // **       in the global configuration.           
       mvnHome = tool 'M3'
    }
-   stage('Build') {
-      // Run the maven build
-      dir("Java/eclipse/simple/HelloEclipsePlugin") {
-        withEnv(["MVN_HOME=$mvnHome"]) {
-            sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean verify'
-        }
+   stage('Create Ant Build File Configuration') {
+      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
+		writeAntBuildFile(eclipseAbsPath)
       }
    }
-   stage('Results') {
-      junit '**/target/surefire-reports/TEST-*.xml'
+   stage("Generate Ant Build File") {
+      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
+        sh "java -jar ${eclipseAbsPath}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
+      }
    }
+//   stage('Build') {
+//      // Run the maven build
+//      dir("Java/eclipse/simple/HelloEclipsePlugin") {
+//        withEnv(["MVN_HOME=$mvnHome"]) {
+//            sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean verify'
+//        }
+//      }
+//   }
+//   stage('Results') {
+//      junit '**/target/surefire-reports/TEST-*.xml'
+//   }
+}
+
+void writeAntBuildFile(eclipseHome) {
+	def data = []
+	data.add('<?xml version="1.0" encoding="UTF-8"?>')
+	data.add('<project name="antbuild" default="generateBuildScript" basedir=".">')
+	data.add('   <property name="eclipse.dir" value="' + eclipseHome + '"/>')
+	data.add('   <property file="build.properties"></property>')
+	data.add('   <basename file="${basedir}" property="project.name"/>')
+	data.add('   <target name="generateBuildScript">')
+	data.add('      <echo>basedir: ${basedir}</echo>')
+	data.add('      <echo>projectName: ${project.name}</echo>')
+	data.add('      <echo>eclipseHome: ${eclipse.dir}</echo>')
+	data.add('      <eclipse.buildScript elements="plugin@at.samplecode.eclipse.plugin"')
+	data.add('                           buildDirectory="${basedir}"')
+	data.add('                           baseLocation="${eclipse.dir}"')
+	data.add('                           pluginPath="${basedir}/../" />')
+	data.add('   </target>')
+	data.add('</project>')
+	data.add("")
+	writeFile encoding: 'UTF-8', file: 'antbuild.xml', text: data.join('\n')
 }
