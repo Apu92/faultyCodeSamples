@@ -1,8 +1,9 @@
 node {
    def mvnHome
    
-   def eclipseAbsPath = "/home/apu/eclipse-rcp-2019-09-R-linux-gtk-x86_64/eclipse"
-   
+//   def eclipseAbsPath = "/home/apu/eclipse-rcp-2019-09-R-linux-gtk-x86_64/eclipse"
+   def eclipseAbsPath = "/home/apu/git/faultyCodeSamples/Java/eclipse/simple/HelloEclipsePlugin/product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
+      
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       git 'https://github.com/Apu92/faultyCodeSamples.git'
@@ -24,6 +25,7 @@ node {
    stage('Build & run infer') {
      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
        withAnt(installation: 'Ant') {
+	     sh "ant clean"
 	     sh "infer run -- ant"
 	   }
      }  
