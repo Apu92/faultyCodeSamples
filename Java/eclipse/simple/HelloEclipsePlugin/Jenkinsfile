@@ -21,6 +21,13 @@ node {
         sh "java -jar ${eclipseAbsPath}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
       }
    }
+   stage('Build & run infer') {
+     dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
+       withAnt(installation: 'Ant') {
+	     sh "infer run -- ant"
+	   }
+     }  
+   }
 //   stage('Build') {
 //      // Run the maven build
 //      dir("Java/eclipse/simple/HelloEclipsePlugin") {
