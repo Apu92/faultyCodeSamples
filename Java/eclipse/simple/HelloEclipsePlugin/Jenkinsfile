@@ -1,9 +1,11 @@
 node {
    def mvnHome
    
-//   def eclipseAbsPath = "/home/apu/eclipse-rcp-2019-09-R-linux-gtk-x86_64/eclipse"
-   def eclipseAbsPath = "/home/apu/git/faultyCodeSamples/Java/eclipse/simple/HelloEclipsePlugin/product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
-      
+   def eclipseRelativePath = "/../product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
+   
+   stage('Clean Workspace') {
+     cleanWs() 
+   }
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       git 'https://github.com/Apu92/faultyCodeSamples.git'
@@ -12,20 +14,27 @@ node {
       // **       in the global configuration.           
       mvnHome = tool 'M3'
    }
+   stage('Create Eclipse') {
+      dir("Java/eclipse/simple/HelloEclipsePlugin/product") {
+        withEnv(["MVN_HOME=$mvnHome"]) {
+            sh '"$MVN_HOME/bin/mvn" package'
+        }
+      }                 
+   }
    stage('Create Ant Build File Configuration') {
       dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-		writeAntBuildFile(eclipseAbsPath)
+		writeAntBuildFile(eclipseRelativePath)
       }
    }
    stage("Generate Ant Build File") {
       dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-        sh "java -jar ${eclipseAbsPath}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
+        def currentAbsolutePath = pwd()
+        sh "java -jar ${currentAbsolutePath}${eclipseRelativePath}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
       }
    }
    stage('Build & run infer') {
      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
        withAnt(installation: 'Ant') {
-	     sh "ant clean"
 	     sh "infer run -- ant"
 	   }
      }  
@@ -47,7 +56,7 @@ void writeAntBuildFile(eclipseHome) {
 	def data = []
 	data.add('<?xml version="1.0" encoding="UTF-8"?>')
 	data.add('<project name="antbuild" default="generateBuildScript" basedir=".">')
-	data.add('   <property name="eclipse.dir" value="' + eclipseHome + '"/>')
+	data.add('   <property name="eclipse.dir" value="${basedir}' + eclipseHome + '"/>')
 	data.add('   <property file="build.properties"></property>')
 	data.add('   <basename file="${basedir}" property="project.name"/>')
 	data.add('   <target name="generateBuildScript">')
