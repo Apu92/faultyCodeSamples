@@ -80,13 +80,13 @@ node {
         }
       }
    }
-//   stage('Build & run infer') {
-//     dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-//       withAnt(installation: 'Ant') {
-//	     sh "infer run -- ant"
-//	   }
-//     }  
-//   }
+   stage('Build & Run Infer') {
+     dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+       withAnt(installation: 'Ant') {
+	     sh "infer run -- ant"
+	   }
+     }  
+   }
 //   stage('Build') {
 //      // Run the maven build
 //      dir("Java/eclipse/simple/HelloEclipsePlugin") {
@@ -119,7 +119,7 @@ void writeAntBuildFile(eclipseHome) {
 	data.add('      <echo>basedir: ${basedir}</echo>')
 	data.add('      <echo>projectName: ${project.name}</echo>')
 	data.add('      <echo>eclipseHome: ${eclipse.dir}</echo>')
-	data.add('      <eclipse.buildScript elements="plugin@at.samplecode.eclipse.plugin"')
+	data.add('      <eclipse.buildScript elements="plugin@${project.name}"')
 	data.add('                           buildDirectory="${basedir}"')
 	data.add('                           baseLocation="${eclipse.dir}"')
 	data.add('                           pluginPath="${basedir}/../" />')
