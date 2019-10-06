@@ -1,7 +1,20 @@
 node {
-   def mvnHome
+
+   //
+   // Global Constants
+   //   
+   def RELATIVE_WORKSPACE_ROOT_FOLDER = "/Java/eclipse/simple/HelloEclipsePlugin/"
    
-   def eclipseRelativePath = "/../product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
+   def ECLIPSE_RELATIVE_PATH = "/../product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
+
+
+   //
+   // Global Variables
+   //   
+   def mvnHome
+
+   def projectList = []
+   
    
    stage('Clean Workspace') {
      cleanWs() 
@@ -14,31 +27,42 @@ node {
       // **       in the global configuration.           
       mvnHome = tool 'M3'
    }
-   stage('Create Eclipse') {
-      dir("Java/eclipse/simple/HelloEclipsePlugin/product") {
-        withEnv(["MVN_HOME=$mvnHome"]) {
-            sh '"$MVN_HOME/bin/mvn" package'
-        }
-      }                 
+   stage('Determine Projects') {
+      def rootFolder = "${WORKSPACE}" + RELATIVE_WORKSPACE_ROOT_FOLDER
+      echo "rootFolder: ${rootFolder}"
+      
+      def projectList = getSubfolders(rootFolder)
+      echo "projectList: ${projectList}"
    }
+//   stage('Create Eclipse') {
+//      dir("Java/eclipse/simple/HelloEclipsePlugin/product") {
+//        withEnv(["MVN_HOME=$mvnHome"]) {
+//            sh '"$MVN_HOME/bin/mvn" package'
+//        }
+//      }                 
+//   }
    stage('Create Ant Build File Configuration') {
-      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-		writeAntBuildFile(eclipseRelativePath)
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        for (project in projectList) {
+          dir(project) {
+	        writeAntBuildFile(ECLIPSE_RELATIVE_PATH)
+          }
+        }
       }
    }
-   stage("Generate Ant Build File") {
-      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-        def currentAbsolutePath = pwd()
-        sh "java -jar ${currentAbsolutePath}${eclipseRelativePath}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
-      }
-   }
-   stage('Build & run infer') {
-     dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
-       withAnt(installation: 'Ant') {
-	     sh "infer run -- ant"
-	   }
-     }  
-   }
+//   stage("Generate Ant Build File") {
+//      dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
+//        def currentAbsolutePath = pwd()
+//        sh "java -jar ${currentAbsolutePath}${ECLIPSE_RELATIVE_PATH}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
+//      }
+//   }
+//   stage('Build & run infer') {
+//     dir("Java/eclipse/simple/HelloEclipsePlugin/HelloNullPointer") {
+//       withAnt(installation: 'Ant') {
+//	     sh "infer run -- ant"
+//	   }
+//     }  
+//   }
 //   stage('Build') {
 //      // Run the maven build
 //      dir("Java/eclipse/simple/HelloEclipsePlugin") {
@@ -50,6 +74,14 @@ node {
 //   stage('Results') {
 //      junit '**/target/surefire-reports/TEST-*.xml'
 //   }
+}
+
+def getSubfolders(directory)
+{
+    dir(directory) {
+	    def subfolders = sh(returnStdout: true, script: "ls -d */").trim().tokenize("\n")   
+	    subfolders
+    }
 }
 
 void writeAntBuildFile(eclipseHome) {
