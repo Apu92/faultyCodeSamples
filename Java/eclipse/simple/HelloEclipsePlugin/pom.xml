@@ -59,6 +59,7 @@
 
 	<modules>
 		<module>HelloNullPointer</module>
+		<module>at.maab.samplecode.eclipse.plugin.base.feature</module>
 		<module>HelloNullPointer.test</module>
 	</modules>
 
