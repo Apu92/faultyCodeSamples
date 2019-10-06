@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="antbuild" default="generateBuildScript" basedir=".">
 
-	<property name="eclipse.dir" value="/home/ma/eclipse/eclipse-rcp-oxygen/eclipse"/>
+	<!-- Call this script via:
+	
+	java -jar /home/ma/rcp-oxygen/eclipse/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml
+	
+	<property name="eclipse.dir" value="${basedir}/../product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"/>
+	-->
+	
+	<property name="eclipse.dir" value="/home/apu/git/faultyCodeSamples/Java/eclipse/simple/HelloEclipsePlugin/product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"/>	
 
 	<property file="build.properties"></property>
 
@@ -10,11 +17,11 @@
 	<target name="generateBuildScript">
 		<echo>${basedir}</echo>
 		<echo>${project.name}</echo>
+		<echo>${eclipse.dir}</echo>
 		
-	    <eclipse.buildScript elements="plugin@${project.name}"
-	        buildDirectory="${basedir}"
-	        baseLocation="${eclipse.dir}"
-	        pluginPath="${basedir}/../" />
+	    <eclipse.buildScript elements="plugin@at.samplecode.eclipse.plugin"
+	        baselocation="${eclipse.dir}"
+	    	buildDirectory="${basedir}" />
 	</target>
 
 </project>
