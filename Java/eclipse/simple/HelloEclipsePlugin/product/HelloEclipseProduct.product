@@ -25,7 +25,6 @@
 
    <features>
       <feature id="org.eclipse.platform" installMode="root"/>
-      <feature id="org.eclipse.help" installMode="root"/>
       <feature id="org.eclipse.pde" installMode="root"/>
       <feature id="org.eclipse.rcp" installMode="root"/>
    </features>
