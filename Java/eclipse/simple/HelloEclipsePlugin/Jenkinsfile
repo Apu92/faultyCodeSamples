@@ -70,6 +70,11 @@ node {
         }
       }
    }
+   stage('Generate Global Ant Build File') {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        writeGlobalAntBuildFile(projectList)
+      }
+   }   
    stage("Generate Ant Build File") {
       dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
         for (project in projectList) {
@@ -127,4 +132,21 @@ void writeAntBuildFile(eclipseHome) {
 	data.add('</project>')
 	data.add("")
 	writeFile encoding: 'UTF-8', file: 'antbuild.xml', text: data.join('\n')
+}
+
+void writeGlobalAntBuildFile(projects) {
+   def data = []
+   data.add('<?xml version="1.0" encoding="UTF-8"?>')
+   data.add('<project name="globalAntBuildFile" default="all" basedir=".">') 
+   data.add('')
+   data.add('<target name="all">')
+   
+   for (project in projects) {
+     data.add('<ant antfile="build.xml" target="build.jars" dir="' + project + '/" />')                 
+   }
+   
+   data.add('</target>')
+   data.add('')
+   data.add('</project>')
+   writeFile encoding: 'UTF-8', file: 'build.xml', text: data.join('\n')   
 }
