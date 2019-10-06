@@ -20,12 +20,9 @@ node {
    stage('Clean Workspace') {
      cleanWs() 
    }
-   stage('Preparation') { // for display purposes
-      // Get some code from a GitHub repository
+   stage('Git Clone & Init Tools') {
       git 'https://github.com/Apu92/faultyCodeSamples.git'
-      // Get the Maven tool.
-      // ** NOTE: This 'M3' Maven tool must be configured
-      // **       in the global configuration.           
+      
       mvnHome = tool 'M3'
    }
    stage('Determine Projects') {
@@ -75,7 +72,7 @@ node {
         writeGlobalAntBuildFile(projectList)
       }
    }   
-   stage("Generate Ant Build File") {
+   stage('Generate Ant Build File') {
       dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
         for (project in projectList) {
           dir(project) {
@@ -88,21 +85,10 @@ node {
    stage('Build & Run Infer') {
      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
        withAnt(installation: 'Ant') {
-	     sh "infer run -- ant"
+	     sh "infer run --pmd-xml -- ant"
 	   }
      }  
    }
-//   stage('Build') {
-//      // Run the maven build
-//      dir("Java/eclipse/simple/HelloEclipsePlugin") {
-//        withEnv(["MVN_HOME=$mvnHome"]) {
-//            sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean verify'
-//        }
-//      }
-//   }
-//   stage('Results') {
-//      junit '**/target/surefire-reports/TEST-*.xml'
-//   }
 }
 
 def getSubfolders(directory)
