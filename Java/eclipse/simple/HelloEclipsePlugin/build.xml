@@ -2,13 +2,13 @@
 <project name="at.samplecode.eclipse.plugin" default="all" basedir=".">
 
 <target name="all">
-     <ant antfile="build.xml" target="build.jars" dir="HelloNullPointer/" />
-     <ant antfile="build.xml" target="build.jars" dir="HelloNullPointer.test/"/>
+     <ant antfile="build.xml" target="build.jars" dir="at.maab.samplecode.eclipse.plugin.base/" />
+     <ant antfile="build.xml" target="build.jars" dir="at.maab.samplecode.eclipse.plugin.base.test/"/>
 </target>
 
 <target name="clean">
-	<ant antfile="build.xml" target="clean" dir="HelloNullPointer/" />
-    <ant antfile="build.xml" target="clean" dir="HelloNullPointer.test/"/>
+	<ant antfile="build.xml" target="clean" dir="at.maab.samplecode.eclipse.plugin.base/" />
+    <ant antfile="build.xml" target="clean" dir="at.maab.samplecode.eclipse.plugin.base.test/"/>
 </target>
 
 </project>
