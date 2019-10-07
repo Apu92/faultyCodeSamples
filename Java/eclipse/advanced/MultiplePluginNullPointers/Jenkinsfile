@@ -42,7 +42,7 @@ node {
       echo "projectList: ${projectList}"
    }
    stage('Create Eclipse') {
-      dir("Java/eclipse/simple/HelloEclipsePlugin/product") {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER + "product") {
         withEnv(["MVN_HOME=$mvnHome"]) {
             sh '"$MVN_HOME/bin/mvn" package'
         }
