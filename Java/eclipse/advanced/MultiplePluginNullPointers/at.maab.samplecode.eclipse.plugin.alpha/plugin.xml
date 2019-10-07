@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="at.maab.samplecode.eclipse.plugin.alpha.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="at.maab.samplecode.eclipse.plugin.alpha.commands.category"
+            name="Sample Command"
+            id="at.maab.samplecode.eclipse.plugin.alpha.commands.sampleCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="at.maab.samplecode.eclipse.plugin.alpha.handlers.SampleAlphaHandler"
+            commandId="at.maab.samplecode.eclipse.plugin.alpha.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="at.maab.samplecode.eclipse.plugin.alpha.commands.sampleCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="at.maab.samplecode.eclipse.plugin.alpha.menus.sampleMenu"
+               label="Sample Menu"
+               mnemonic="M">
+            <command
+                  commandId="at.maab.samplecode.eclipse.plugin.alpha.commands.sampleCommand"
+                  id="at.maab.samplecode.eclipse.plugin.alpha.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="at.maab.samplecode.eclipse.plugin.alpha.toolbars.sampleToolbar">
+            <command
+                  id="at.maab.samplecode.eclipse.plugin.alpha.toolbars.sampleCommand"
+                  commandId="at.maab.samplecode.eclipse.plugin.alpha.commands.sampleCommand"
+                  icon="icons/sample.png"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>

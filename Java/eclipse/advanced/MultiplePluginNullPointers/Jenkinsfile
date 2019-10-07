@@ -1,0 +1,138 @@
+node {
+
+   //
+   // Global Constants
+   //   
+   def RELATIVE_WORKSPACE_ROOT_FOLDER = "Java/eclipse/advanced/MultiplePluginNullPointers/"
+   
+   def ECLIPSE_RELATIVE_PATH = "/../product/target/products/HelloEclipseProduct/linux/gtk/x86_64/hello-eclipse-v1.0.0"
+
+   def FILE_NAME_BUILD_PROPERTIES = "build.properties"
+
+   //
+   // Global Variables
+   //   
+   def mvnHome
+
+   def projectList = []
+   
+   
+   stage('Clean Workspace') {
+     cleanWs() 
+   }
+   stage('Git Clone & Init Tools') {
+      git 'https://github.com/Apu92/faultyCodeSamples.git'
+      
+      mvnHome = tool 'M3'
+   }
+   stage('Determine Projects') {
+      def rootFolder = "${WORKSPACE}/" + RELATIVE_WORKSPACE_ROOT_FOLDER
+      echo "rootFolder: ${rootFolder}"
+      
+      def projects = getSubfolders(rootFolder)
+      for (project in projects) {
+      	if (project.contains(".feature") || project.contains("product")) {
+		  continue                   
+      	}
+      	
+      	project = project.replace("/", "")
+      	projectList.add(project)
+      }
+      
+      echo "projectList: ${projectList}"
+   }
+   stage('Create Eclipse') {
+      dir("Java/eclipse/simple/HelloEclipsePlugin/product") {
+        withEnv(["MVN_HOME=$mvnHome"]) {
+            sh '"$MVN_HOME/bin/mvn" package'
+        }
+      }                 
+   }
+   stage('Create Ant Build File Configuration') {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        for (project in projectList) {
+          dir(project) {
+	        writeAntBuildFile(ECLIPSE_RELATIVE_PATH)
+          }
+        }
+      }
+   }
+   stage('Manipulate Build Properties') {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        for (project in projectList) {
+          dir(project) {
+	        def readContent = readFile FILE_NAME_BUILD_PROPERTIES
+			writeFile file: FILE_NAME_BUILD_PROPERTIES, text: readContent + "\r\njavacSource = 1.8\njavacTarget = 1.8"
+          }
+        }
+      }
+   }
+   stage('Generate Global Ant Build File') {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        writeGlobalAntBuildFile(projectList)
+      }
+   }   
+   stage('Generate Ant Build File') {
+      dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+        for (project in projectList) {
+          dir(project) {
+            def currentAbsolutePath = pwd()
+            sh "java -jar ${currentAbsolutePath}${ECLIPSE_RELATIVE_PATH}/plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.ant.core.antRunner -buildfile antbuild.xml"
+          }
+        }
+      }
+   }
+   stage('Build & Run Infer') {
+     dir(RELATIVE_WORKSPACE_ROOT_FOLDER) {
+       withAnt(installation: 'Ant') {
+	     sh "infer run --pmd-xml -- ant"
+	   }
+     }  
+   }
+}
+
+def getSubfolders(directory)
+{
+    dir(directory) {
+	    def subfolders = sh(returnStdout: true, script: "ls -d */").trim().tokenize("\n")   
+	    subfolders
+    }
+}
+
+void writeAntBuildFile(eclipseHome) {
+	def data = []
+	data.add('<?xml version="1.0" encoding="UTF-8"?>')
+	data.add('<project name="antbuild" default="generateBuildScript" basedir=".">')
+	data.add('   <property name="eclipse.dir" value="${basedir}' + eclipseHome + '"/>')
+	data.add('   <property file="build.properties"></property>')
+	data.add('   <basename file="${basedir}" property="project.name"/>')
+	data.add('   <target name="generateBuildScript">')
+	data.add('      <echo>basedir: ${basedir}</echo>')
+	data.add('      <echo>projectName: ${project.name}</echo>')
+	data.add('      <echo>eclipseHome: ${eclipse.dir}</echo>')
+	data.add('      <eclipse.buildScript elements="plugin@${project.name}"')
+	data.add('                           buildDirectory="${basedir}"')
+	data.add('                           baseLocation="${eclipse.dir}"')
+	data.add('                           pluginPath="${basedir}/../" />')
+	data.add('   </target>')
+	data.add('</project>')
+	data.add("")
+	writeFile encoding: 'UTF-8', file: 'antbuild.xml', text: data.join('\n')
+}
+
+void writeGlobalAntBuildFile(projects) {
+   def data = []
+   data.add('<?xml version="1.0" encoding="UTF-8"?>')
+   data.add('<project name="globalAntBuildFile" default="all" basedir=".">') 
+   data.add('')
+   data.add('<target name="all">')
+   
+   for (project in projects) {
+     data.add('<ant antfile="build.xml" target="build.jars" dir="' + project + '/" />')                 
+   }
+   
+   data.add('</target>')
+   data.add('')
+   data.add('</project>')
+   writeFile encoding: 'UTF-8', file: 'build.xml', text: data.join('\n')   
+}
