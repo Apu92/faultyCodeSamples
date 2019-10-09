@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Alpha
-Bundle-SymbolicName: at.maab.samplecode.eclipse.plugin.alpha;singleton:=true
+Bundle-SymbolicName: at.maab.samplecode.eclipse.plugin.beta;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  at.maab.samplecode.eclipse.plugin.base
