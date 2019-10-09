@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="at.samplecode.eclipse.plugin"
+         id="at.maab.samplecode.eclipse.plugin.base"
          download-size="0"
          install-size="0"
          version="0.0.0"
